@@ -8,6 +8,8 @@ import ytlib
 
 app = Flask(__name__)
 
+lastRequesttime = 0;
+
 #ytlib.init()
 
 # Get vendor from LCM_SN#
@@ -35,11 +37,22 @@ def pl_get():
 	results = ytlib.g.active.songs
 	return jsonify(results)
 
-@app.route('/api/playlist/ctrl/<cmd>', methods=['GET', 'OPTIONS', 'POST'])
+@app.route('/api/playctrl/<cmd>', methods=['GET', 'OPTIONS', 'POST'])
 def pl_ctrl(cmd):
-	ytlib.playlistCtrl(cmd)
+	ytlib.playCtrl(cmd)
 	results = ytlib.g.active.songs
 	return jsonify(results)
+
+@app.route('/api/playstatus', methods=['GET', 'OPTIONS', 'POST'])
+def pl_status():
+	if len(ytlib.g.active.songs):
+		title = ytlib.g.active.songs[0]['title']
+	else:
+		title = "No Songs Playing"
+	
+	response = {'nowPlaying' : title, 'percentElapsed' : ytlib.g.percentElapsed, 'pl_token' : ytlib.g.pl_token}
+
+	return jsonify(response)
 
 @app.route('/api/search/text/<searchtext>', methods=['GET', 'OPTIONS', 'POST'])
 def searchtext(searchtext):

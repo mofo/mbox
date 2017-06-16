@@ -795,6 +795,9 @@ class g(object):
     paused = False
     skip = False
     volume = 20
+    elapsedTime = 0;
+    percentElapsed = 0
+    pl_token = 0;
     last_search_query = {}
     current_pagetoken = ''
     page_tokens = ['']
@@ -891,25 +894,26 @@ def init():
     # __main__.Playlist = Playlist
     # __main__.Video = Video
 
-    if "mpv" in Config.PLAYER.get and not mswin:
-        options = utf8_decode(subprocess.check_output(
-            [Config.PLAYER.get, "--list-options"]))
-        # g.mpv_usesock = "--input-unix-socket" in options and not mswin
+    # if "mpv" in Config.PLAYER.get and not mswin:
+    #     options = utf8_decode(subprocess.check_output(
+    #         [Config.PLAYER.get, "--list-options"]))
+    #     # g.mpv_usesock = "--input-unix-socket" in options and not mswin
 
-        if "--input-unix-socket" in options:
-            g.mpv_usesock = True
-            dbg(c.g + "mpv supports --input-unix-socket" + c.w)
+    #     if "--input-unix-socket" in options:
+    #         g.mpv_usesock = True
+    #         dbg(c.g + "mpv supports --input-unix-socket" + c.w)
 
-    try:
-        import mpris
-        g.mprisctl, conn = multiprocessing.Pipe()
-        t = multiprocessing.Process(target=mpris.main, args=(conn,))
-        t.daemon = True
-        t.start()
-    except ImportError:
-        pass
-
+    # try:
+    #     import mpris
+    #     g.mprisctl, conn = multiprocessing.Pipe()
+    #     t = multiprocessing.Process(target=mpris.main, args=(conn,))
+    #     t.daemon = True
+    #     t.start()
+    # except ImportError:
+    #     pass
+    #random.init
     #process_cl_args(sys.argv)
+    g.pl_token = random.randint(0, 99999)
 
 
 def init_transcode():
@@ -2196,6 +2200,8 @@ def launch_player(song, songdata, cmd):
                           sockpath=sockpath)
 
             print ("this is when it exits")
+            
+            g.percentElapsed = 0
 
             if p.poll():
                 p.terminate()
@@ -2374,6 +2380,9 @@ def make_status_line(elapsed_s, prefix, songlength=0, volume=None):
             display_m %= 60
 
     pct = (float(elapsed_s) / songlength * 100) if songlength else 0
+    
+    g.percentElapsed = pct
+    g.elapsedTime = elapsed_s
 
     status_line = "%02i:%02i:%02i %s" % (
         display_h, display_m, display_s,
@@ -3284,6 +3293,7 @@ def songlist_rm_add(action, songNum):
 
         g.active.songs.append(g.model.songs[selection])
         d = g.active.duration
+        g.pl_token = random.randint(0, 99999)
 
         if g.playing == False:
             start_automated_play()
@@ -3558,10 +3568,11 @@ def play_plist_thread():
                 g.message = c.y + "Playback halted" + c.w
                 break
 
-            g.active.songs.pop(0)
-
         else:
             break
+
+        g.active.songs.pop(0)
+        g.pl_token = random.randint(0, 99999)
 
     g.playing = False
 
@@ -3571,7 +3582,7 @@ def start_automated_play():
         t = threading.Thread(target=play_plist_thread)
         t.start()
 
-def playlistCtrl(cmd):
+def playCtrl(cmd):
     global g
     print (cmd)
 
@@ -3580,6 +3591,22 @@ def playlistCtrl(cmd):
         print("gian: " + cmd)
         g.playing = False
 
+    elif cmd == "skip":
+
+        print("gian: " + cmd)
+        g.skip = True
+
+def playStatus():
+
+    if cmd == "stop":
+
+        print("gian: " + cmd)
+        g.playing = False
+
+    elif cmd == "skip":
+
+        print("gian: " + cmd)
+        g.skip = True
 
 def get_dl_data(song, mediatype="any"):
     """ Get filesize and metadata for all streams, return dict. """

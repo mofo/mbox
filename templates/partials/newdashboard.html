@@ -1,0 +1,28 @@
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Display Stations</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+                        <!-- /.row -->
+            <div class="row">
+                {% for projectdict in details %}
+                <a href="#/product/{{ projectdict[0] }}">
+                <div class="col-lg-3 col-md-6">
+                    {% for color in projectdict[1].Color %}
+                        <div class="panel panel-{{color}}" {{ color }}>
+                    {% endfor %}
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-8 text-right">
+                                    <div class="huge">{{ projectdict[0] }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </a>
+                {% endfor %}
+            </div>          
+            <div id="thePlace" class="row" style="width:100%">
+            </div>

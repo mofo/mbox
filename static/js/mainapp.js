@@ -44,6 +44,8 @@ app.factory('songList', function($http, $q){
     return d.promise;
 });
 
+var serverAddress = 'http://localhost:5000';
+
 app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', function($scope, $resource, $http, $interval) {
 
     var Issue = $resource('http://localhost:5000/api/playlist/get');
@@ -60,7 +62,7 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', functio
     var newToken = 0;
 
     $scope.searchtext = function() {
-        var searchapi = 'http://localhost:5000/api/search/text/' + $scope.searchstring;
+        var searchapi = '/api/search/text/' + $scope.searchstring;
         var NewIssue = $resource(searchapi);
         $scope.songs.length = 0;
         $scope.songs = NewIssue.query();
@@ -73,7 +75,7 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', functio
     };
 
     $scope.searchnext = function() {
-        var searchapi = 'http://localhost:5000/api/search/searchnext';
+        var searchapi = '/api/search/searchnext';
         var NewIssue = $resource(searchapi);
         $scope.songs.length = 0;
         $scope.songs = NewIssue.query();
@@ -86,7 +88,7 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', functio
     };
 
     $scope.searchprev = function() {
-        var searchapi = 'http://localhost:5000/api/search/searchprev';
+        var searchapi = '/api/search/searchprev';
         var NewIssue = $resource(searchapi);
         $scope.songs.length = 0;
         $scope.songs = NewIssue.query();
@@ -99,7 +101,7 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', functio
     };
 
     $scope.addsong = function(songNum) {
-        var searchapi = 'http://localhost:5000/api/playlist/add/' + songNum;
+        var searchapi = '/api/playlist/add/' + songNum;
         var NewIssue = $resource(searchapi);
         $scope.songs.length = 0;
         $scope.songs = NewIssue.query();
@@ -112,7 +114,7 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', functio
     };
 
     $scope.playctrl = function(command) {
-        var searchapi = 'http://localhost:5000/api/playctrl/' + command;
+        var searchapi = '/api/playctrl/' + command;
         var NewIssue = $resource(searchapi);
         $scope.songs.length = 0;
         $scope.songs = NewIssue.query();
@@ -139,7 +141,7 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', functio
         console.log(currentToken);
         if (newToken != currentToken) {
             currentToken = newToken;
-            var Playlist = $resource('http://localhost:5000/api/playlist/get');
+            var Playlist = $resource('api/playlist/get');
             var newPlaylist = Playlist.query();
             //$scope.songs.length = 0;
             newPlaylist.$promise.then(function(){

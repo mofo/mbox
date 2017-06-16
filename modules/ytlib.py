@@ -761,6 +761,7 @@ class Playlist(object):
     def getSongs(self):
         return self.songs
 
+
 class g(object):
 
     """ Class for holding globals that are needed throught the module. """
@@ -831,7 +832,6 @@ class g(object):
             "geo": "-geometry"}
         }
 
-
 def get_version_info():
     """ Return version and platform info. """
     out = ("\nmpsyt version  : %s " % __version__)
@@ -853,6 +853,14 @@ def get_version_info():
 
     return out
 
+
+def getplaying():
+    global g
+    return g.playing
+
+def getskip():
+    global g
+    return g.skip
 
 def process_cl_args(args):
     """ Process command line arguments. """
@@ -2179,8 +2187,8 @@ def launch_player(song, songdata, cmd):
                     g.mprisctl.send(('mpv-fifo', fifopath))
                     g.mprisctl.send(('metadata', (song["ytid"], song["title"],
                                                   song["length"], arturl)))
-
-                p = subprocess.Popen(cmd, shell=False, stderr=subprocess.PIPE,
+                print ("gian: this is before opening the pipes")
+                p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                      bufsize=1)
 
             print("gian: here is before player_status")
@@ -2287,12 +2295,13 @@ def player_status(po_obj, prefix, songlength=0, mpv=False, sockpath=None):
 
     else:
         elapsed_s = 0
+
         print("gian: in player_status elapsed_s")
+
         while po_obj.poll() is None:
             stdstream = po_obj.stderr if mpv else po_obj.stdout
-            char = stdstream.read(1).decode("utf-8", errors="ignore")
 
-            #print("gian: in player_status loop")
+            char = stdstream.read(1).decode("utf-8", errors="ignore")
 
             if char in '\r\n':
 
@@ -2341,10 +2350,7 @@ def player_status(po_obj, prefix, songlength=0, mpv=False, sockpath=None):
 
             else:
 
-                #print("g.playing: " + g.playing + "g.skip: " + g.skip)
-
                 if g.playing != True:
-                    #g.mprisctl.send(('stop', True))
                     return
                 if g.skip == True:
                     return
@@ -3566,10 +3572,12 @@ def start_automated_play():
         t.start()
 
 def playlistCtrl(cmd):
-
+    global g
     print (cmd)
-    
+
     if cmd == "stop":
+
+        print("gian: " + cmd)
         g.playing = False
 
 

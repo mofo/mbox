@@ -8,8 +8,7 @@ import ytlib
 
 app = Flask(__name__)
 
-
-ytlib.init()
+#ytlib.init()
 
 # Get vendor from LCM_SN#
 #def get_lcm_vendor(df):

@@ -20,12 +20,12 @@
 body {
   padding-top: 70px;
   padding-bottom: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
-body,
 .navbar-fixed-top,
 .navbar-fixed-bottom {
-  min-width: 970px;
 }
 
 /* Don't let the lead text change font-size. */
@@ -50,8 +50,8 @@ body,
 
 /* Reset the container */
 .container {
-  width: 800px;
-  max-width: none !important;
+  max-width: 800px;
+
 }
 
 /* Demonstrate the grids */

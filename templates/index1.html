@@ -90,7 +90,7 @@
                         <thead>
                             <tr>
                                 <th>{[{totalItems}]}</th>
-                                <th>Id</th>
+                                <th>Time</th>
                                 <th>Title</th>
                             </tr>
                     </thead>
@@ -101,7 +101,7 @@
                                     <img src="{[{obj.thumb}]}" height="40" width="55">
                                 </a>
                             </td>
-                            <td><a>{[{$index}]}</a></td>
+                            <td><a>{[{obj.timestring}]}</a></td>
                             <td>{[{obj.title}]}</td>
                         </tr>
                     </tbody>

@@ -1586,6 +1586,19 @@ def get_tracks_from_json(jsons):
             else:
                 duration = 30
 
+            durationString = ''
+
+            print (hours + "h" + minutes + "m" + seconds)
+
+            if hours:
+                durationString += hours + 'h '
+            if minutes:
+                durationString += minutes + 'm '
+            if seconds:
+                durationString += seconds + 's '
+
+            #durationString = hours + ':' + minutes + ':' + seconds
+
             stats = item.get('statistics', {})
             snippet = item.get('snippet', {})
             title = snippet.get('title', '').strip()
@@ -1595,7 +1608,7 @@ def get_tracks_from_json(jsons):
             rating = 5.*likes/(likes+dislikes) if (likes+dislikes) > 0 else 0
             thumb = snippet.get('thumbnails', {}).get('default', {}).get('url')
             #cursong = Video(ytid=ytid, title=title, length=duration, thumb=thumb)
-            cursong = {'ytid' : ytid, 'title' : title, 'length' : duration, 'thumb' : thumb }
+            cursong = {'ytid' : ytid, 'title' : title, 'length' : duration, 'timestring' : durationString, 'thumb' : thumb }
 
             # cache video information in custom global variable store
             g.meta[ytid] = dict(

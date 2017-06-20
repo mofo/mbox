@@ -1,0 +1,13 @@
+[Unit]
+Description=Music server
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/beatsbox
+ExecStart=/usr/bin/python /home/pi/beatsbox/app.py
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

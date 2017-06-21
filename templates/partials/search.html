@@ -1,0 +1,32 @@
+                <div class="col-md-12 col-xs-12">
+
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>{[{totalItems}]}</th>
+                                <th>Time</th>
+                                <th>Title</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="songslist" ng-repeat="obj in songs">
+                            <td>
+                                <a href="#/playlist" ng-click="addsong($index)">
+                                    <img src="{[{obj.thumb}]}" height="40" width="55">
+                                </a>
+                            </td>
+                            <td><a>{[{obj.timestring}]}</a></td>
+                            <td>{[{obj.title}]}</td>
+                        </tr>
+                    </tbody>
+                    </table>
+
+                </div>
+                <div class="col-md-12 col-xs-12 text-rigth">
+                    <button type="button" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-chevron-left" ng-click="searchprev()"></span>
+                    </button>
+                     <button type="button" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-chevron-right" ng-click="searchnext()"></span>
+                    </button>
+                </div>

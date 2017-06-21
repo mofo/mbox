@@ -62,11 +62,13 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', '$state
     });
     $scope.currentPage = 1;
     $scope.numPerPage = 10;
+    $scope.playbuttongliph = 'glyphicon glyphicon-play'
 
     var currentPlayingSong = '';
     var currentPlayingListLength = 0;
     var currentToken = 0;
     var newToken = 0;
+    var isplaying = false;
 
     $scope.searchtext = function() {
         $state.go('search');
@@ -123,6 +125,15 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', '$state
     };
 
     $scope.playctrl = function(command) {
+
+        if (command == 'invert') {
+            if (isplaying) {
+                command = 'stop'
+            } else {
+                command = 'play'
+            }
+        }
+
         var searchapi = '/api/playctrl/' + command;
         var NewIssue = $resource(searchapi);
         $scope.songs.length = 0;
@@ -143,12 +154,26 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', '$state
             $scope.statusPercent = Math.round(results.percentElapsed);
             $scope.statusNowPlaying = results.nowPlaying;
             newToken = results.pl_token;
+
+            if (newToken != currentToken) {
+
+                isplaying = results.isplaying;
+
+                if (results.isplaying) {
+                    $scope.playbuttongliph = 'glyphicon glyphicon-stop'
+                } else {
+                    $scope.playbuttongliph = 'glyphicon glyphicon-play'
+                }
+            }
         });
 
         console.log(newToken);
         console.log(currentToken);
+
         if (newToken != currentToken) {
+
             currentToken = newToken;
+
             var Playlist = $resource('api/playlist/get');
             var newPlaylist = Playlist.query();
             //$scope.songs.length = 0;

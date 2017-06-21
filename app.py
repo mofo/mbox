@@ -10,22 +10,14 @@ import ytlib
 
 app = Flask(__name__)
 
-lastRequesttime = 0;
-
 ytlib.init()
 
-# Get vendor from LCM_SN#
-#def get_lcm_vendor(df):
-#	Vendor_list
-#	df=DisplaySttn1.keep_file_frtend(df1,build,'Special_Build_Description')
-#	return df
-
 #
-#  Here are the "templates" endpoints
+#  Here are the "API" endpoints
 #
 @app.route('/')
 def index():
-	return render_template('index2.html')
+	return render_template('index.html')
 
 @app.route('/api/playlist/add/<num>', methods=['GET', 'OPTIONS', 'POST'])
 def pl_add(num):
@@ -51,8 +43,8 @@ def pl_status():
 		title = ytlib.g.active.songs[0]['title']
 	else:
 		title = "No Songs Playing"
-	
-	response = {'nowPlaying' : title, 'percentElapsed' : ytlib.g.percentElapsed, 'pl_token' : ytlib.g.pl_token}
+
+	response = {'isplaying' : ytlib.g.playing, 'nowPlaying' : title, 'percentElapsed' : ytlib.g.percentElapsed, 'pl_token' : ytlib.g.pl_token}
 
 	return jsonify(response)
 
@@ -113,7 +105,7 @@ def playlist():
 
 @app.route('/templates/search', methods=['GET', 'OPTIONS', 'POST'])
 def search():
-    return render_template('/partials/playlist.html')
+    return render_template('/partials/search.html')
 
 
 @app.route('/dashboard') #default page @ localhost:5000/

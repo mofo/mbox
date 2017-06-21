@@ -15,7 +15,7 @@
     <!--link rel="stylesheet" href="static/bootstrap-3.3.7/css/bootstrap-select-1.11.0.min.css"-->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <!--link href="/static/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet"-->
-    <link href="/static/dist/css/sb-admin-2.css" rel="stylesheet">
+    <!--link href="/static/dist/css/sb-admin-2.css" rel="stylesheet"-->
     <link href="/static/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="/static/bootstrap-3.3.7/css/custom.css" rel="stylesheet">
 
@@ -23,68 +23,67 @@
 
 <body>
 
-    <div id="wrapper" class="container" ng-app="mainApp" ng-controller="mainCtrl">
+    <div id="wrapper" ng-app="mainApp" ng-controller="mainCtrl">
+    <!-- Fixed navbar -->
         <nav class="navbar navbar-default navbar-fixed-top">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar">here</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Beats Box</a>
+                <!-- The mobile navbar-toggle button can be safely removed since you do not need it in a non-responsive implementation -->
+                <a class="navbar-brand" href="#"><img alt="Beats" src="/static/img/beats-audio.jpg" style="width: 30px; height: 30px; margin-top: -5px; margin-right: 10px; margin-left: 10px">Beats Box</a>
+
                 </div>
-                <div id="navbar" class="navbar-collapse collapse">
+            <!-- Note that the .navbar-collapse and .collapse classes have been removed from the #navbar -->
+                <div id="navbar">
                     <form class="navbar-form navbar-right" ng-submit="searchtext()">
                         <div class="form-group">
-                            <input type="text" ng-model="searchstring" ng-enter="searchtext()" class="form-control" placeholder="Search ...">
+                            <input type="text" ng-model="searchstring" ng-enter="searchtext()" class="form-control" placeholder="Search...">
                         </div>
-                        <button class="btn btn-default" type="button" ng-click="searchtext()">
-                            <i class="fa fa-search"></i>
-                        </button>
+                        <button type="submit" class="btn btn-default" ng-enter="searchtext()">Go</button>
                     </form>
-                </div><!--/.navbar-collapse -->
+                </div><!--/.nav-collapse -->
             </div>
-        </nav>
-<!-- Navigation -->
+        </nav><!-- Navigation -->
 
-            <div class="row centerfold" style="margin-top: 50px">
-                <div class="col-md-12">
-                    AC/DC back in Black
-                </div>
-                <div class="col-md-12">
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                        60%
+        <div id="page-wrapper" class="row">
+            <div class="container">
+            <!-- /.row -->
+                <div class="row page-header" style="margin-top: 50px">
+                    <div class="col-md-12">
+                        {[{statusNowPlaying}]}
+                    </div>
+                    <div class="col-md-12">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="{[{statusPercent}]}" aria-valuemin="0" aria-valuemax="100" style="width: {[{statusPercent}]}%;">
+                            {[{statusPercent}]}%
+                            </div>
                         </div>
                     </div>
+                    <div class="col-md-12 text-rigth">
+                        <button type="button" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-backward"></span>
+                        </button>
+                         <button type="button" class="btn btn-default btn-sm" ng-click="playctrl('invert')">
+                            <span class="{[{playbuttongliph}]}"></span>
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-forward"></span>
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm" ng-click="playctrl('skip')">
+                            <span class="glyphicon glyphicon-fast-forward"></span>
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-volume-down"></span>
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-volume-up"></span>
+                        </button>
+                    </div>
+                    <!-- /.col-lg-12 -->
                 </div>
-                <div class="col-md-12 text-rigth">
-                    <button type="button" class="btn btn-default btn-sm">
-                        <span class="glyphicon glyphicon-backward"></span>
-                    </button>
-                     <button type="button" class="btn btn-default btn-sm">
-                        <span class="glyphicon glyphicon-play"></span>
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm">
-                        <span class="glyphicon glyphicon-forward"></span>
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm">
-                        <span class="glyphicon glyphicon-fast-forward"></span>
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm">
-                        <span class="glyphicon glyphicon-volume-down"></span>
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm">
-                        <span class="glyphicon glyphicon-volume-up"></span>
-                    </button>
+                <div class="row"  ui-view style="margin-top: 30px">
+                    <!-- Here is where the lists go -->
                 </div>
-                <!-- /.col-lg-12 -->
             </div>
-
-        <div id="page-wrapper" class="row centerfold" ui-view style="margin-top: 50px">
-
         </div>
     </div>
     <!-- /#wrapper -->

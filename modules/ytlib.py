@@ -1944,6 +1944,7 @@ def play_plist_thread():
 
 def start_automated_play():
         g.playing = True
+        g.pl_token = random.randint(0, 99999)
         t = threading.Thread(target=play_plist_thread)
         t.start()
 
@@ -1954,14 +1955,15 @@ def playCtrl(cmd):
 
     if cmd == "stop":
 
-        print("gian: " + cmd)
         g.playing = False
 
     elif cmd == "skip":
 
-        print("gian: " + cmd)
         g.skip = True
 
+    elif cmd == "play":
+        if g.playing is False:
+            start_automated_play()
 
 def songlist_mv_sw(action, a, b):
     """ Move a song or swap two songs. """

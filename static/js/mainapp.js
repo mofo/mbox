@@ -7,17 +7,24 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
     $urlRouterProvider.otherwise('');
 
-    $stateProvider.state('index', {
+    $stateProvider.state('main', {
         url         : '',
-        templateUrl : '/dashboard',
-        controller  : 'mainCtrl'
+        //templateUrl : '/templates/playlist'
+        //redirectTo  : 'playlist',
+        onEnter     : function ($state){
+            $state.go ('playlist');
+        }
+        //controller  : 'mainCtrl'
     })
-    .state('productdashboard', {
-        url         : '/product/:productId',
-        templateUrl : function(urlattr){
-            return '/product/' + urlattr.productId + '/dashboard';
-        },
-        controller  : 'prodController'
+    .state('playlist', {
+        url         : '/playlist',
+        templateUrl : '/templates/playlist'
+        //controller  : 'mainCtrl'
+    })
+    .state('search', {
+        url         : '/search',
+        templateUrl : '/templates/search'
+        //controller  : 'prodController'
     })
     .state('productstationroot', {
         url         : '/product/:productId/station/:stationId',
@@ -46,7 +53,7 @@ app.factory('songList', function($http, $q){
 
 var serverAddress = 'http://localhost:5000';
 
-app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', function($scope, $resource, $http, $interval) {
+app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', '$state', function($scope, $resource, $http, $interval, $state) {
 
     var Issue = $resource('http://localhost:5000/api/playlist/get');
     $scope.songs = Issue.query();
@@ -62,6 +69,7 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', functio
     var newToken = 0;
 
     $scope.searchtext = function() {
+        $state.go('search');
         var searchapi = '/api/search/text/' + $scope.searchstring;
         var NewIssue = $resource(searchapi);
         $scope.songs.length = 0;
@@ -111,6 +119,7 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', functio
         });
         $scope.currentPage = 1;
         $scope.numPerPage = 10;
+        //$state.go ('playlist'); 
     };
 
     $scope.playctrl = function(command) {
@@ -128,7 +137,6 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', functio
 
     $scope.playstatus = function() {
         var searchapi = 'api/playstatus';
-
         var NewIssue = $resource(searchapi);
         var results = NewIssue.get();
         results.$promise.then(function(){

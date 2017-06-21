@@ -833,7 +833,8 @@ def init():
     #     pass
     #random.init
     #process_cl_args(sys.argv)
-    g.pl_token = random.randint(0, 99999)
+    g.pl_token = 0
+    #random.randint(0, 99999)
 
 
 def init_cache():

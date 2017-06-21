@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 lastRequesttime = 0;
 
-#ytlib.init()
+ytlib.init()
 
 # Get vendor from LCM_SN#
 #def get_lcm_vendor(df):
@@ -25,7 +25,7 @@ lastRequesttime = 0;
 #
 @app.route('/')
 def index():
-	return render_template('index1.html')
+	return render_template('index2.html')
 
 @app.route('/api/playlist/add/<num>', methods=['GET', 'OPTIONS', 'POST'])
 def pl_add(num):
@@ -94,7 +94,6 @@ def addsong(searchtext):
 def skipsong(searchtext):
     return jsonify(builds[corr].keys())
 
-
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -107,6 +106,16 @@ def graph():
 #
 #  Here are the "partials" endpoints
 #
+
+@app.route('/templates/playlist', methods=['GET', 'OPTIONS', 'POST'])
+def playlist():
+    return render_template('/partials/playlist.html')
+
+@app.route('/templates/search', methods=['GET', 'OPTIONS', 'POST'])
+def search():
+    return render_template('/partials/playlist.html')
+
+
 @app.route('/dashboard') #default page @ localhost:5000/
 def dash():
 	return render_template('/partials/dashboard2.html')

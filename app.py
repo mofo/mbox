@@ -23,12 +23,16 @@ def index():
 def pl_add(num):
 	songNumInt = int(num)
 	ytlib.songlist_rm_add("add", songNumInt)
-	results = ytlib.g.active.songs
+	songs = ytlib.g.active.songs
+	header = {'pl_token' : ytlib.g.pl_token}
+	results = {'header' : header, 'songs' : songs}
 	return jsonify(results)
 
 @app.route('/api/playlist/get', methods=['GET', 'OPTIONS', 'POST'])
 def pl_get():
-	results = ytlib.g.active.songs
+	songs = ytlib.g.active.songs
+	header = {'pl_token' : ytlib.g.pl_token}
+	results = {'header' : header, 'songs' : songs}
 	return jsonify(results)
 
 @app.route('/api/playctrl/<cmd>', methods=['GET', 'OPTIONS', 'POST'])
@@ -54,17 +58,16 @@ def searchtext(searchtext):
 	results = ytlib.g.model.songs
 	return jsonify(results)
 
-@app.route('/api/search/searchnext', methods=['GET', 'OPTIONS', 'POST'])
-def searchnext():
-	ytlib.nextprev("n")
-	results = ytlib.g.model.songs
-	for song in results:
-		print(song["title"])
-	return jsonify(results)
+@app.route('/api/search/<nextprev>', methods=['GET', 'OPTIONS', 'POST'])
+def searchnextprev(nextprev):
+	
+	print (nextprev)
 
-@app.route('/api/search/searchprev', methods=['GET', 'OPTIONS', 'POST'])
-def searchprev():
-	ytlib.nextprev("p")
+	if nextprev == 'next':
+		ytlib.nextprev("n")
+	else:
+		ytlib.nextprev("p")
+
 	results = ytlib.g.model.songs
 	return jsonify(results)
 

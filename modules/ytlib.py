@@ -1944,7 +1944,6 @@ def play_plist_thread():
 
 def start_automated_play():
         g.playing = True
-        g.pl_token = random.randint(0, 99999)
         t = threading.Thread(target=play_plist_thread)
         t.start()
 
@@ -1963,6 +1962,7 @@ def playCtrl(cmd):
 
     elif cmd == "play":
         if g.playing is False:
+            g.pl_token = random.randint(0, 99999)
             start_automated_play()
 
 def songlist_mv_sw(action, a, b):

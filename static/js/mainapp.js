@@ -55,14 +55,8 @@ var serverAddress = 'http://localhost:5000';
 
 app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', '$state', function($scope, $resource, $http, $interval, $state) {
 
-    var Issue = $resource('http://localhost:5000/api/playlist/get');
-    $scope.songs = Issue.query();
-    $scope.songs.$promise.then(function(){
-        $scope.totalItems = $scope.songs.length;
-    });
-    $scope.currentPage = 1;
-    $scope.numPerPage = 10;
     $scope.playbuttongliph = 'glyphicon glyphicon-play'
+    $scope.songs = [];
 
     var currentPlayingSong = '';
     var currentPlayingListLength = 0;
@@ -78,50 +72,37 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', '$state
         $scope.songs = NewIssue.query();
         $scope.songs.$promise.then(function(){
             $scope.totalItems = $scope.songs.length;
-            console.log($scope.totalItems);
+            //console.log($scope.totalItems);
         });
-        $scope.currentPage = 1;
-        $scope.numPerPage = 10;
     };
 
-    $scope.searchnext = function() {
-        var searchapi = '/api/search/searchnext';
+    $scope.searchnextprev = function(value) {
+        var searchapi = '/api/search/' + value;
+        console.log(searchapi);
         var NewIssue = $resource(searchapi);
         $scope.songs.length = 0;
         $scope.songs = NewIssue.query();
         $scope.songs.$promise.then(function(){
             $scope.totalItems = $scope.songs.length;
-            console.log($scope.totalItems);
+            //console.log($scope.totalItems);
         });
-        $scope.currentPage = 1;
-        $scope.numPerPage = 10;
-    };
-
-    $scope.searchprev = function() {
-        var searchapi = '/api/search/searchprev';
-        var NewIssue = $resource(searchapi);
-        $scope.songs.length = 0;
-        $scope.songs = NewIssue.query();
-        $scope.songs.$promise.then(function(){
-            $scope.totalItems = $scope.songs.length;
-            console.log($scope.totalItems);
-        });
-        $scope.currentPage = 1;
-        $scope.numPerPage = 10;
     };
 
     $scope.addsong = function(songNum) {
-        var searchapi = '/api/playlist/add/' + songNum;
-        var NewIssue = $resource(searchapi);
+        var addapi = '/api/playlist/add/' + songNum;
+        //$http.post(addapi);
+        $state.go('playlist');
+        //$scope.playstatus();
+        var NewIssue = $resource(addapi);
         $scope.songs.length = 0;
-        $scope.songs = NewIssue.query();
-        $scope.songs.$promise.then(function(){
+
+        var newPlaylist = NewIssue.get();
+        newPlaylist.$promise.then(function(){
+            $scope.songs = newPlaylist.songs
             $scope.totalItems = $scope.songs.length;
-            console.log($scope.totalItems);
+            currentToken = newPlaylist.header.pl_token;
+            //console.log('addsong token: ' + currentToken);
         });
-        $scope.currentPage = 1;
-        $scope.numPerPage = 10;
-        //$state.go ('playlist'); 
     };
 
     $scope.playctrl = function(command) {
@@ -135,53 +116,47 @@ app.controller('mainCtrl', ['$scope', '$resource', '$http', '$interval', '$state
         }
 
         var searchapi = '/api/playctrl/' + command;
-        var NewIssue = $resource(searchapi);
-        $scope.songs.length = 0;
-        $scope.songs = NewIssue.query();
-        $scope.songs.$promise.then(function(){
-            $scope.totalItems = $scope.songs.length;
-            console.log($scope.totalItems);
-        });
-        $scope.currentPage = 1;
-        $scope.numPerPage = 10;
+        $http.post(searchapi);
     };
 
     $scope.playstatus = function() {
         var searchapi = 'api/playstatus';
         var NewIssue = $resource(searchapi);
         var results = NewIssue.get();
+
         results.$promise.then(function(){
             $scope.statusPercent = Math.round(results.percentElapsed);
             $scope.statusNowPlaying = results.nowPlaying;
             newToken = results.pl_token;
 
-            if (newToken != currentToken) {
+            //console.log('new Token' + newToken);
+            //console.log('currentToken Token' + currentToken);
 
+            if (isplaying != results.isplaying) {
                 isplaying = results.isplaying;
-
                 if (results.isplaying) {
                     $scope.playbuttongliph = 'glyphicon glyphicon-stop'
                 } else {
                     $scope.playbuttongliph = 'glyphicon glyphicon-play'
                 }
             }
+
+            if (newToken != currentToken) {
+
+                currentToken = newToken;
+
+                var Playlist = $resource('api/playlist/get');
+                var newPlaylist = Playlist.get();
+                //$scope.songs.length = 0;
+                newPlaylist.$promise.then(function(){
+                    //console.log('Test');
+
+                    $scope.songs = newPlaylist.songs;
+                    $scope.totalItems = $scope.songs.length;
+                });
+            }
+
         });
-
-        console.log(newToken);
-        console.log(currentToken);
-
-        if (newToken != currentToken) {
-
-            currentToken = newToken;
-
-            var Playlist = $resource('api/playlist/get');
-            var newPlaylist = Playlist.query();
-            //$scope.songs.length = 0;
-            newPlaylist.$promise.then(function(){
-                $scope.songs = newPlaylist
-                $scope.totalItems = newPlaylist.length;
-            });
-        }
     };
 
     $scope.paginate = function(value) {

@@ -1054,7 +1054,7 @@ def get_track_id_from_json(item):
         for p in field.split('/'):
             if node and type(node) is dict:
                 node = node.get(p)
-        if node:
+        if node and type(node) is not dict:
             return node
     return ''
 
@@ -1095,12 +1095,17 @@ def get_tracks_from_json(jsons):
         dbg("got unexpected data or no search results")
         return False
 
+    tracks = ([get_track_id_from_json(i) for i in items])
+
+    theid = ','.join(tracks)
+
+    print ("this is the ID " + theid)
+
     # fetch detailed information about items from videos API
     vurl = "https://www.googleapis.com/youtube/v3/videos"
     vurl += "?" + urlencode({'part':'contentDetails,statistics,snippet',
                              'key': Config.API_KEY.get,
-                             'id': ','.join([get_track_id_from_json(i)
-                                             for i in items])})
+                             'id': theid})
     try:
         wdata = utf8_decode(urlopen(vurl).read())
         wdata = json.loads(wdata)
